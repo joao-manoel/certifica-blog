@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -10,29 +9,14 @@ import Logo from "./logo";
 type NavLink = { label: string; href: string };
 
 const NAV_LINKS: NavLink[] = [
-  { label: "Início", href: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/#home` },
+  { label: "Início", href: `/` },
   { label: "Sobre", href: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/#sobre` },
-  { label: "Blog", href: `/` },
   {
     label: "Serviços",
-    href: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/servicos`,
+    href: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/services`,
   },
   { label: "Contato", href: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/#contact` },
 ];
-
-function CtaButton({
-  className,
-  onClick,
-}: {
-  className?: string;
-  onClick?: () => void;
-}) {
-  return (
-    <Button size="sm" asChild className={className} onClick={onClick}>
-      <Link href="/orcamento">Solicitar Orçamento</Link>
-    </Button>
-  );
-}
 
 function NavItems({
   links = NAV_LINKS,
@@ -80,7 +64,7 @@ export function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b-2">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between gap-24 h-16 md:h-20">
           {/* Logo */}
           <Link href="/#home" className="flex items-center gap-2">
             <Logo />
@@ -91,9 +75,8 @@ export function Header() {
             <NavItems />
           </div>
 
-          {/* Desktop CTA */}
-          <div className="hidden md:flex items-center gap-4">
-            <CtaButton />
+          <div className=" h-full flex items-center px-8">
+            <Link href="https://certifica.eng.br">Site Completo</Link>
           </div>
 
           {/* Mobile toggle */}
@@ -115,9 +98,6 @@ export function Header() {
             className="md:hidden py-4 border-t border-border"
           >
             <NavItems direction="col" gap="gap-4" onItemClick={closeMenu} />
-            <div className="pt-3">
-              <CtaButton className="w-full" onClick={closeMenu} />
-            </div>
           </div>
         )}
       </div>
