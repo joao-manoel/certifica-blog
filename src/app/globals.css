@@ -216,3 +216,21 @@
 .animate-scale.animated {
   animation-name: scaleIn;
 }
+
+/* evita problemas de largura em imagens */
+.tinymce-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* estiliza <hr> de modo sutil no seu tema */
+.tinymce-content hr {
+  border: 0;
+  border-top: 1px solid hsl(var(--muted-foreground) / 0.25);
+  margin: 1.5rem 0;
+}
+
+/* dark mode (se usar) */
+:root.dark .tinymce-content {
+  color: hsl(var(--foreground));
+}

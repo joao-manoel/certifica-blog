@@ -1,4 +1,5 @@
-import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react'
+import { Facebook, Instagram, Linkedin } from "lucide-react";
+import Logo from "./logo";
 
 export function Footer() {
   return (
@@ -7,17 +8,7 @@ export function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-white border-2 flex items-center justify-center">
-                <span className="text-white font-bold text-xl">
-                  <img
-                    src="images/certifica-icon-verde.png"
-                    className="h-5 w-5"
-                  />
-                </span>
-              </div>
-              <span className="text-xl font-bold text-foreground">
-                Certifica
-              </span>
+              <Logo logoWidth="sm" />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               A confiança que seu imóvel precisa e a expertise que você merece!
@@ -102,13 +93,6 @@ export function Footer() {
               >
                 <Linkedin className="h-5 w-5 text-muted-foreground hover:text-primary" />
               </a>
-              <a
-                href="https://www.twitter.com/certifica.eng/"
-                target="_blank"
-                className="w-10 h-10 rounded-lg glass flex items-center justify-center hover:bg-primary/10 transition-colors"
-              >
-                <Twitter className="h-5 w-5 text-muted-foreground hover:text-primary" />
-              </a>
             </div>
           </div>
         </div>
@@ -119,5 +103,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

@@ -1,54 +1,57 @@
-'use client'
+"use client";
 
-import { Button } from '@/components/ui/button'
-import { Menu, X } from 'lucide-react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { useState } from 'react'
-import clsx from 'clsx'
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import clsx from "clsx";
+import Logo from "./logo";
 
-type NavLink = { label: string; href: string }
+type NavLink = { label: string; href: string };
 
 const NAV_LINKS: NavLink[] = [
-  { label: 'Início', href: '/#home' },
-  { label: 'Sobre', href: '/sobre' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Serviços', href: '/servicos' },
-  { label: 'Contato', href: '/#contact' }
-]
+  { label: "Início", href: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/#home` },
+  { label: "Sobre", href: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/#sobre` },
+  { label: "Blog", href: `/` },
+  {
+    label: "Serviços",
+    href: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/servicos`,
+  },
+  { label: "Contato", href: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/#contact` },
+];
 
 function CtaButton({
   className,
-  onClick
+  onClick,
 }: {
-  className?: string
-  onClick?: () => void
+  className?: string;
+  onClick?: () => void;
 }) {
   return (
     <Button size="sm" asChild className={className} onClick={onClick}>
       <Link href="/orcamento">Solicitar Orçamento</Link>
     </Button>
-  )
+  );
 }
 
 function NavItems({
   links = NAV_LINKS,
-  direction = 'row',
-  gap = 'gap-8',
+  direction = "row",
+  gap = "gap-8",
   onItemClick,
-  className
+  className,
 }: {
-  links?: NavLink[]
-  direction?: 'row' | 'col'
-  gap?: string
-  onItemClick?: () => void
-  className?: string
+  links?: NavLink[];
+  direction?: "row" | "col";
+  gap?: string;
+  onItemClick?: () => void;
+  className?: string;
 }) {
   return (
     <nav
       className={clsx(
-        'items-center',
-        direction === 'row' ? 'flex' : 'flex flex-col',
+        "items-center",
+        direction === "row" ? "flex" : "flex flex-col",
         gap,
         className
       )}
@@ -65,14 +68,14 @@ function NavItems({
         </Link>
       ))}
     </nav>
-  )
+  );
 }
 
 export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleMenu = () => setIsMenuOpen((v) => !v)
-  const closeMenu = () => setIsMenuOpen(false)
+  const toggleMenu = () => setIsMenuOpen((v) => !v);
+  const closeMenu = () => setIsMenuOpen(false);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b-2">
@@ -80,19 +83,7 @@ export function Header() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link href="/#home" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-white border-2 flex items-center justify-center">
-              <Image
-                src="/images/certifica-icon-verde.png"
-                alt="Certifica"
-                width={20}
-                height={20}
-                className="h-5 w-5"
-                priority
-              />
-            </div>
-            <span className="text-xl font-bold font-anton text-foreground">
-              Certifica
-            </span>
+            <Logo />
           </Link>
 
           {/* Desktop nav */}
@@ -111,7 +102,7 @@ export function Header() {
             onClick={toggleMenu}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-menu"
-            aria-label={isMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+            aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -131,5 +122,5 @@ export function Header() {
         )}
       </div>
     </header>
-  )
+  );
 }
