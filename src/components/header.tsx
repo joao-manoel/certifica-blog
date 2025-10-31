@@ -1,0 +1,135 @@
+'use client'
+
+import { Button } from '@/components/ui/button'
+import { Menu, X } from 'lucide-react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { useState } from 'react'
+import clsx from 'clsx'
+
+type NavLink = { label: string; href: string }
+
+const NAV_LINKS: NavLink[] = [
+  { label: 'Início', href: '/#home' },
+  { label: 'Sobre', href: '/sobre' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Serviços', href: '/servicos' },
+  { label: 'Contato', href: '/#contact' }
+]
+
+function CtaButton({
+  className,
+  onClick
+}: {
+  className?: string
+  onClick?: () => void
+}) {
+  return (
+    <Button size="sm" asChild className={className} onClick={onClick}>
+      <Link href="/orcamento">Solicitar Orçamento</Link>
+    </Button>
+  )
+}
+
+function NavItems({
+  links = NAV_LINKS,
+  direction = 'row',
+  gap = 'gap-8',
+  onItemClick,
+  className
+}: {
+  links?: NavLink[]
+  direction?: 'row' | 'col'
+  gap?: string
+  onItemClick?: () => void
+  className?: string
+}) {
+  return (
+    <nav
+      className={clsx(
+        'items-center',
+        direction === 'row' ? 'flex' : 'flex flex-col',
+        gap,
+        className
+      )}
+      aria-label="Navegação principal"
+    >
+      {links.map(({ label, href }) => (
+        <Link
+          key={href}
+          href={href}
+          className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+          onClick={onItemClick}
+        >
+          {label}
+        </Link>
+      ))}
+    </nav>
+  )
+}
+
+export function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const toggleMenu = () => setIsMenuOpen((v) => !v)
+  const closeMenu = () => setIsMenuOpen(false)
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b-2">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo */}
+          <Link href="/#home" className="flex items-center gap-2">
+            <div className="w-10 h-10 rounded-lg bg-white border-2 flex items-center justify-center">
+              <Image
+                src="/images/certifica-icon-verde.png"
+                alt="Certifica"
+                width={20}
+                height={20}
+                className="h-5 w-5"
+                priority
+              />
+            </div>
+            <span className="text-xl font-bold font-anton text-foreground">
+              Certifica
+            </span>
+          </Link>
+
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-6">
+            <NavItems />
+          </div>
+
+          {/* Desktop CTA */}
+          <div className="hidden md:flex items-center gap-4">
+            <CtaButton />
+          </div>
+
+          {/* Mobile toggle */}
+          <button
+            className="md:hidden text-foreground p-2"
+            onClick={toggleMenu}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+            aria-label={isMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* Mobile menu */}
+        {isMenuOpen && (
+          <div
+            id="mobile-menu"
+            className="md:hidden py-4 border-t border-border"
+          >
+            <NavItems direction="col" gap="gap-4" onItemClick={closeMenu} />
+            <div className="pt-3">
+              <CtaButton className="w-full" onClick={closeMenu} />
+            </div>
+          </div>
+        )}
+      </div>
+    </header>
+  )
+}
