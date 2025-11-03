@@ -1,0 +1,102 @@
+.tinymce-content pre[class*="language-"] {
+  border-radius: 0.75rem;
+  border: 1px solid hsl(var(--border) / 0.3);
+  background: linear-gradient(
+    145deg,
+    hsl(var(--background) / 0.85),
+    hsl(var(--secondary) / 0.25)
+  );
+  backdrop-filter: blur(10px) saturate(1.2);
+  padding: 1.25rem 1.5rem;
+  overflow: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: hsl(var(--foreground));
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+/* Código inline */
+.tinymce-content :not(pre) > code {
+  border-radius: 0.5rem;
+  background: hsl(var(--muted) / 0.35);
+  padding: 0.1rem 0.35rem;
+  border: 1px solid hsl(var(--border) / 0.4);
+  font-family: inherit;
+}
+
+/* Remove bg duplicado do <code> dentro do <pre> */
+.tinymce-content pre[class*="language-"] > code {
+  background: transparent !important;
+  padding: 0;
+  display: block;
+  color: hsl(#000);
+}
+
+/* Número de linhas (se habilitar plugin no futuro) */
+.line-numbers .line-numbers-rows > span:before {
+  color: hsl(var(--muted-foreground));
+}
+
+/* -------- Tokens Prism (adaptados ao seu DS) -------- */
+.tinymce-content .token.comment,
+.tinymce-content .token.prolog,
+.tinymce-content .token.doctype,
+.tinymce-content .token.cdata {
+  color: hsl(var(--muted-foreground));
+}
+
+.tinymce-content .token.punctuation {
+  color: hsl(var(--muted-foreground));
+}
+
+.tinymce-content .token.property,
+.tinymce-content .token.tag,
+.tinymce-content .token.constant,
+.tinymce-content .token.symbol,
+.tinymce-content .token.deleted {
+  color: #ef4444;
+} /* vermelho */
+
+.tinymce-content .token.boolean,
+.tinymce-content .token.number {
+  color: #f59e0b;
+} /* amarelo */
+
+.tinymce-content .token.selector,
+.tinymce-content .token.attr-name,
+.tinymce-content .token.string,
+.tinymce-content .token.char,
+.tinymce-content .token.builtin,
+.tinymce-content .token.inserted {
+  color: #10b981;
+} /* verde */
+
+.tinymce-content .token.operator,
+.tinymce-content .token.entity,
+.tinymce-content .token.url,
+.tinymce-content .language-css .token.string,
+.tinymce-content .style .token.string {
+  color: #8b5cf6;
+} /* roxo */
+
+.tinymce-content .token.atrule,
+.tinymce-content .token.attr-value,
+.tinymce-content .token.keyword {
+  color: #3b82f6;
+} /* azul */
+
+.tinymce-content .token.function,
+.tinymce-content .token.class-name {
+  color: #eab308;
+} /* dourado */
+
+/* Dark mode: inverte apenas o necessário */
+:root.dark .tinymce-content pre[class*="language-"] {
+  background: hsl(var(--muted) / 0.25);
+  border-color: hsl(var(--border) / 0.24);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}

@@ -1,0 +1,147 @@
+/* Ajustes comuns do HTML gerado pelo TinyMCE */
+.tinymce-content li p {
+  margin: 0;
+} /* evita espaçamento duplo em listas  */
+.tinymce-content img {
+  margin: 0;
+  max-width: 100%;
+  height: auto;
+}
+.tinymce-content hr {
+  border-color: hsl(var(--border));
+}
+
+/* Tabelas e código mais legíveis */
+.tinymce-content table {
+  @apply w-full border-collapse;
+}
+.tinymce-content th,
+.tinymce-content td {
+  @apply border px-3 py-2;
+}
+.tinymce-content code {
+  @apply rounded bg-muted px-1 py-0.5;
+}
+.tinymce-content pre {
+  @apply rounded bg-muted p-4 overflow-x-auto;
+}
+
+/* evita problemas de largura em imagens */
+.tinymce-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* estiliza <hr> de modo sutil no seu tema */
+.tinymce-content hr {
+  border: 0;
+  border-top: 1px solid hsl(var(--muted-foreground) / 0.25);
+  margin: 1.5rem 0;
+}
+
+/* dark mode (se usar) */
+:root.dark .tinymce-content {
+  color: hsl(var(--foreground));
+}
+/* Correções para HTML do TinyMCE */
+.prose li p {
+  margin: 0;
+} /* TinyMCE põe <p> dentro de <li> */
+.prose img {
+  margin: 0;
+} /* evita “gap” ao redor de imagens */
+.prose hr {
+  border-color: hsl(var(--border));
+}
+.tinymce-content pre {
+  @apply relative rounded-xl overflow-x-auto p-4 bg-muted/40 border border-border/40;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  white-space: pre;
+  tab-size: 2;
+  color: hsl(var(--foreground));
+}
+
+/* Efeito sutil de vidro para harmonizar com o resto do design */
+.tinymce-content pre::before {
+  content: attr(class);
+  position: absolute;
+  top: 0.4rem;
+  right: 0.8rem;
+  font-size: 0.7rem;
+  opacity: 0.5;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* Código inline (<code>) */
+.tinymce-content code {
+  @apply px-1 py-[2px] rounded bg-muted/30 text-primary font-medium;
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* Remove background duplicado dentro de <pre><code> */
+.tinymce-content pre code {
+  @apply bg-transparent p-0 text-foreground;
+}
+
+/* Destaque sintático básico (sem PrismJS) */
+.tinymce-content .token.comment,
+.tinymce-content .token.prolog,
+.tinymce-content .token.doctype,
+.tinymce-content .token.cdata {
+  color: #6b7280; /* cinza */
+}
+
+.tinymce-content .token.punctuation {
+  color: #9ca3af;
+}
+
+.tinymce-content .token.property,
+.tinymce-content .token.tag,
+.tinymce-content .token.constant,
+.tinymce-content .token.symbol,
+.tinymce-content .token.deleted {
+  color: #ef4444; /* vermelho */
+}
+
+.tinymce-content .token.boolean,
+.tinymce-content .token.number {
+  color: #f59e0b; /* amarelo */
+}
+
+.tinymce-content .token.selector,
+.tinymce-content .token.attr-name,
+.tinymce-content .token.string,
+.tinymce-content .token.char,
+.tinymce-content .token.builtin,
+.tinymce-content .token.inserted {
+  color: #10b981; /* verde */
+}
+
+.tinymce-content .token.operator,
+.tinymce-content .token.entity,
+.tinymce-content .token.url,
+.tinymce-content .language-css .token.string,
+.tinymce-content .style .token.string {
+  color: #8b5cf6; /* roxo */
+}
+
+.tinymce-content .token.atrule,
+.tinymce-content .token.attr-value,
+.tinymce-content .token.keyword {
+  color: #3b82f6; /* azul */
+}
+
+.tinymce-content .token.function,
+.tinymce-content .token.class-name {
+  color: #eab308; /* dourado */
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+  .tinymce-content pre {
+    font-size: 0.8rem;
+  }
+}

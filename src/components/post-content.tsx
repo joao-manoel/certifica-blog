@@ -1,8 +1,9 @@
-// components/blog/post-content.tsx
 "use client";
-
+import "prismjs/themes/prism-tomorrow.css";
+import Prism from "prismjs";
 import { isTinyHtml } from "@/utils/is-tiny-html-utils";
 import { normalizeTinyMce, sanitizeHtml } from "@/utils/sanitize-html-utils";
+import { useEffect } from "react";
 
 type AnyJson = unknown;
 
@@ -11,12 +12,15 @@ export default function PostContent({ content }: { content: AnyJson }) {
 
   if (isTinyHtml(content)) {
     const normalized = normalizeTinyMce(content.html || "");
-    // Garanta que seu sanitize NÃO remova 'class', 'id', 'target', 'rel'
     const clean = sanitizeHtml(normalized, {
       allowedAttributes: {
         "*": ["href", "src", "alt", "title", "class", "id", "target", "rel"],
       },
     });
+
+    useEffect(() => {
+      Prism.highlightAll();
+    }, [content]);
 
     return (
       <article className="tinymce-content">
@@ -26,9 +30,8 @@ export default function PostContent({ content }: { content: AnyJson }) {
     );
   }
 
-  // Fallback debug
   return (
-    <pre className="text-xs whitespace-pre-wrap break-words bg-muted/30 p-4 rounded-xl">
+    <pre className="text-xs whitespace-pre-wrap wrap-break-word bg-muted/30 p-4 rounded-xl">
       {JSON.stringify(content, null, 2)}
     </pre>
   );

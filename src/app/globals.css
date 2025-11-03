@@ -1,5 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "../assets/styles/prism-certifica.css";
+@import "../assets/styles/tinymce-content.css";
+@import "../assets/styles/tinymce.css";
+
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
@@ -140,34 +144,6 @@
   --tw-prose-captions: hsl(var(--muted-foreground));
 }
 
-/* Ajustes comuns do HTML gerado pelo TinyMCE */
-.tinymce-content li p {
-  margin: 0;
-} /* evita espaçamento duplo em listas  */
-.tinymce-content img {
-  margin: 0;
-  max-width: 100%;
-  height: auto;
-}
-.tinymce-content hr {
-  border-color: hsl(var(--border));
-}
-
-/* Tabelas e código mais legíveis */
-.tinymce-content table {
-  @apply w-full border-collapse;
-}
-.tinymce-content th,
-.tinymce-content td {
-  @apply border px-3 py-2;
-}
-.tinymce-content code {
-  @apply rounded bg-muted px-1 py-0.5;
-}
-.tinymce-content pre {
-  @apply rounded bg-muted p-4 overflow-x-auto;
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -263,32 +239,4 @@
 
 .animate-scale.animated {
   animation-name: scaleIn;
-}
-
-/* evita problemas de largura em imagens */
-.tinymce-content img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* estiliza <hr> de modo sutil no seu tema */
-.tinymce-content hr {
-  border: 0;
-  border-top: 1px solid hsl(var(--muted-foreground) / 0.25);
-  margin: 1.5rem 0;
-}
-
-/* dark mode (se usar) */
-:root.dark .tinymce-content {
-  color: hsl(var(--foreground));
-}
-/* Correções para HTML do TinyMCE */
-.prose li p {
-  margin: 0;
-} /* TinyMCE põe <p> dentro de <li> */
-.prose img {
-  margin: 0;
-} /* evita “gap” ao redor de imagens */
-.prose hr {
-  border-color: hsl(var(--border));
 }
