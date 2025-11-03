@@ -1,15 +1,17 @@
 // app/(blog)/[slug]/page.tsx
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import type { Metadata } from "next";
+
 import { getPost } from "@/http/get-post";
 import PostContent from "@/components/post-content";
 import PostMeta from "@/components/post-meta";
 import { Badge } from "@/components/ui/badge";
-import type { Metadata } from "next";
+import { AdPlaceholder } from "@/components/ads-placeholder";
+import { SuggestedPosts } from "@/components/post-suggest";
 
 type Params = { slug: string };
 
-// Next 16: params é Promise
 export async function generateMetadata(props: {
   params: Promise<Params>;
 }): Promise<Metadata> {
@@ -42,62 +44,86 @@ export async function generateMetadata(props: {
 }
 
 export default async function PostPage(props: { params: Promise<Params> }) {
-  const { slug } = await props.params; // <-- desembrulha
+  const { slug } = await props.params;
   const post = await getPost(slug).catch(() => null);
   if (!post) notFound();
 
   return (
-    <article className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-background">
-      <header className="px-4 pt-28 pb-8">
-        <div className="container mx-auto max-w-3xl">
-          <div className="flex flex-wrap gap-2 mb-4">
-            {post.categories?.map((c) => (
-              <Badge
-                key={c.id}
-                className="bg-primary/10 text-primary border-primary/20"
-              >
-                {c.name}
-              </Badge>
-            ))}
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">{post.title}</h1>
-          <PostMeta
-            authorName={post.author?.name ?? "—"}
-            publishedAt={post.publishedAt ?? post.createdAt}
-            readTime={post.readTime}
-          />
-        </div>
-      </header>
-
-      {post.coverUrl && (
-        <div className="relative h-[42vh] w-full">
+    <article className="min-h-screen w-full bg-gradient-to-br from-background via-secondary/10 to-background">
+      {/* HERO COM COVER */}
+      <section className="relative h-[60vh] w-full overflow-hidden">
+        {post.coverUrl ? (
           <Image
             src={post.coverUrl}
             alt={post.title}
             fill
-            className="object-cover"
             priority
+            className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-        </div>
-      )}
+        ) : (
+          <div className="absolute inset-0 bg-muted" />
+        )}
 
-      <section className="px-4 py-10">
-        <div className="container mx-auto max-w-3xl prose prose-invert prose-headings:scroll-mt-24">
-          <PostContent content={post.content} />
-        </div>
+        {/* overlay para contraste */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/60 to-background/10 backdrop-blur-[2px]" />
 
-        {post.tags?.length ? (
-          <div className="container mx-auto max-w-3xl mt-10">
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map((t) => (
-                <Badge key={t.id} variant="outline">
-                  #{t.name}
-                </Badge>
-              ))}
-            </div>
+        {/* CARD GLASS COM TÍTULO/META */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[92%] max-w-5xl">
+          <div className="backdrop-blur-md bg-background/60 border border-border/40 rounded-2xl p-6 md:p-8 shadow-lg">
+            {/* categorias */}
+            {post.categories?.length ? (
+              <div className="flex flex-wrap gap-2 mb-3">
+                {post.categories.map((c) => (
+                  <Badge
+                    key={c.id}
+                    className="bg-primary/10 text-primary border-primary/20"
+                  >
+                    {c.name}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
+
+            <h1 className="text-3xl md:text-5xl font-bold leading-tight text-foreground mb-4">
+              {post.title}
+            </h1>
+
+            <PostMeta
+              authorName={post.author?.name ?? "—"}
+              publishedAt={post.publishedAt ?? post.createdAt}
+              readTime={post.readTime}
+            />
           </div>
-        ) : null}
+        </div>
+      </section>
+
+      {/* CONTEÚDO + SIDEBAR */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-4 gap-10">
+          {/* Coluna principal */}
+          <div className="lg:col-span-3 space-y-10">
+            <AdPlaceholder size="small" />
+            {/* Tipografia vem do PostContent (que já aplica .prose no wrapper) */}
+            <PostContent content={post.content} />
+
+            {/* Tags */}
+            {post.tags?.length ? (
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((t) => (
+                  <Badge key={t.id} variant="outline">
+                    #{t.name}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
+            <AdPlaceholder size="large" />
+          </div>
+
+          {/* Sidebar */}
+          <aside className="space-y-6">
+            <AdPlaceholder size="small" />
+          </aside>
+        </div>
       </section>
     </article>
   );

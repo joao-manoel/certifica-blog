@@ -51,7 +51,7 @@ const ALLOWED_ATTR = [
   "data-end",
 ];
 
-export function sanitizeHtml(html: string) {
+export function sanitizeHtml(html: string, p0: { allowedAttributes: { "*": string[]; }; }) {
   // Mantém style + data-attrs e limpa CSS perigoso
   return DOMPurify.sanitize(html, {
     ALLOWED_TAGS,
@@ -62,4 +62,14 @@ export function sanitizeHtml(html: string) {
     // Opcional: força links seguros
     ADD_ATTR: [],
   });
+}
+
+export function normalizeTinyMce(html: string) {
+  // Remove <p> dentro de <li> para não “duplificar” margens
+  let out = html
+    .replace(/<li>\s*<p>/g, "<li>")
+    .replace(/<\/p>\s*<\/li>/g, "</li>");
+  // Remova data-* se não precisar (limpa ruído)
+  out = out.replace(/\sdata-[a-z0-9-]+="[^"]*"/gi, "");
+  return out;
 }

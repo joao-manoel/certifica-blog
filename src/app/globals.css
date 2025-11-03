@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -120,6 +121,53 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Wrapper para conteúdo HTML salvo pelo TinyMCE */
+.tinymce-content {
+  /* Tipografia base + responsivo, sem limite de largura */
+  /* (usa utilitários Tailwind via @apply) */
+  @apply prose prose-neutral dark:prose-invert max-w-none;
+
+  /* Cores da tipografia atreladas ao seu design system */
+  --tw-prose-body: hsl(var(--foreground));
+  --tw-prose-headings: hsl(var(--foreground));
+  --tw-prose-links: hsl(var(--primary));
+  --tw-prose-bold: hsl(var(--foreground));
+  --tw-prose-counters: hsl(var(--muted-foreground));
+  --tw-prose-bullets: hsl(var(--muted-foreground));
+  --tw-prose-hr: hsl(var(--border));
+  --tw-prose-quotes: hsl(var(--foreground));
+  --tw-prose-quote-borders: hsl(var(--border));
+  --tw-prose-captions: hsl(var(--muted-foreground));
+}
+
+/* Ajustes comuns do HTML gerado pelo TinyMCE */
+.tinymce-content li p {
+  margin: 0;
+} /* evita espaçamento duplo em listas  */
+.tinymce-content img {
+  margin: 0;
+  max-width: 100%;
+  height: auto;
+}
+.tinymce-content hr {
+  border-color: hsl(var(--border));
+}
+
+/* Tabelas e código mais legíveis */
+.tinymce-content table {
+  @apply w-full border-collapse;
+}
+.tinymce-content th,
+.tinymce-content td {
+  @apply border px-3 py-2;
+}
+.tinymce-content code {
+  @apply rounded bg-muted px-1 py-0.5;
+}
+.tinymce-content pre {
+  @apply rounded bg-muted p-4 overflow-x-auto;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -233,4 +281,14 @@
 /* dark mode (se usar) */
 :root.dark .tinymce-content {
   color: hsl(var(--foreground));
+}
+/* Correções para HTML do TinyMCE */
+.prose li p {
+  margin: 0;
+} /* TinyMCE põe <p> dentro de <li> */
+.prose img {
+  margin: 0;
+} /* evita “gap” ao redor de imagens */
+.prose hr {
+  border-color: hsl(var(--border));
 }
