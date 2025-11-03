@@ -8,7 +8,7 @@ import PostContent from "@/components/post-content";
 import PostMeta from "@/components/post-meta";
 import { Badge } from "@/components/ui/badge";
 import { AdPlaceholder } from "@/components/ads-placeholder";
-import { SuggestedPosts } from "@/components/post-suggest";
+import { SuggestedPosts } from "@/components/related-posts";
 
 type Params = { slug: string };
 
@@ -122,6 +122,7 @@ export default async function PostPage(props: { params: Promise<Params> }) {
           {/* Sidebar */}
           <aside className="space-y-6">
             <AdPlaceholder size="small" />
+            <SuggestedPosts identifier={post.id} />
           </aside>
         </div>
       </section>
