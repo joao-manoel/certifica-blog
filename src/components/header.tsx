@@ -10,12 +10,7 @@ type NavLink = { label: string; href: string };
 
 const NAV_LINKS: NavLink[] = [
   { label: "Início", href: `/` },
-  { label: "Sobre", href: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/#sobre` },
-  {
-    label: "Serviços",
-    href: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/services`,
-  },
-  { label: "Contato", href: `${process.env.NEXT_PUBLIC_WEBSITE_URL}/#contact` },
+  { label: "Site Completo", href: `https://certifica.eng.br` },
 ];
 
 function NavItems({
@@ -73,10 +68,6 @@ export function Header() {
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-6">
             <NavItems />
-          </div>
-
-          <div className=" h-full flex items-center px-8">
-            <Link href="https://certifica.eng.br">Site Completo</Link>
           </div>
 
           {/* Mobile toggle */}

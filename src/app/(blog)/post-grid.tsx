@@ -10,6 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import PostCard from "@/components/post-card";
+import SkeletonGrid from "./skeleton-grid";
+import ErrorState from "./error-state";
+import { slugify } from "@/utils/utils";
 
 type Props = { categories: string[] };
 
@@ -19,16 +22,28 @@ export default function PostsGrid({ categories }: Props) {
   const [page, setPage] = useState(1);
   const perPage = 9;
 
-  // PostsGrid (apenas trechos alterados)
   const q = useDebounce(searchTerm.trim(), 350);
-  const hasSearch = q.length >= 2; // mesmo limiar do hook
+  const hasSearch = q.length >= 2;
 
-  const baseParams = useMemo(
-    () => ({ page, pageSize: perPage, sort: "publishedAt" } as const),
-    [page, perPage]
+  // ← mapeia "Todos" para undefined; demais viram slug
+  const categorySlug = useMemo(
+    () =>
+      selectedCategory === "Todos" ? undefined : slugify(selectedCategory),
+    [selectedCategory]
   );
 
-  // listagem: só quando NÃO há busca
+  // LISTAGEM (sem q) — já inclui filtro por categoria
+  const baseParams = useMemo(
+    () =>
+      ({
+        page,
+        pageSize: perPage,
+        sort: "publishedAt",
+        categorySlug, // ← aqui
+      } as const),
+    [page, perPage, categorySlug]
+  );
+
   const {
     data: listData,
     isPending: isListPending,
@@ -36,18 +51,19 @@ export default function PostsGrid({ categories }: Props) {
     error: listError,
     refetch: refetchList,
     isRefetching: isListRefetching,
-  } = usePostsQuery(baseParams); // <--- desabilita
+  } = usePostsQuery(baseParams);
 
-  // busca
+  // BUSCA (com q) — também passa categorySlug
   const searchParams = useMemo(() => {
     if (!hasSearch) return null;
     return {
       q,
       page,
       pageSize: perPage,
-      sort: "relevance", // nada de ":desc"
+      sort: "relevance",
+      categorySlug, // ← aqui
     } as const;
-  }, [hasSearch, q, page, perPage]);
+  }, [hasSearch, q, page, perPage, categorySlug]);
 
   const {
     data: searchData,
@@ -58,7 +74,7 @@ export default function PostsGrid({ categories }: Props) {
     isRefetching: isSearchRefetching,
   } = useSearchPostsQuery(searchParams);
 
-  // qual fonte usar?
+  // fonte de dados
   const data = hasSearch ? searchData : listData;
   const isPending = hasSearch ? isSearchPending : isListPending;
   const isError = hasSearch ? isSearchError : isListError;
@@ -66,10 +82,8 @@ export default function PostsGrid({ categories }: Props) {
   const refetch = hasSearch ? refetchSearch : refetchList;
   const isRefetching = hasSearch ? isSearchRefetching : isListRefetching;
 
-  // animação
   const searchAnimation = useScrollAnimation();
 
-  // paginação
   const total = data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / perPage));
 
@@ -94,7 +108,7 @@ export default function PostsGrid({ categories }: Props) {
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
-                if (page !== 1) setPage(1); // volta página
+                if (page !== 1) setPage(1);
               }}
               className="pl-10 bg-background/50"
             />
@@ -168,53 +182,6 @@ export default function PostsGrid({ categories }: Props) {
           Próxima
         </Button>
       </div>
-    </div>
-  );
-}
-
-/* ---------- Helpers/UI ---------- */
-
-function slugify(name: string) {
-  return name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9-]/g, "");
-}
-
-function SkeletonGrid() {
-  return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="animate-pulse">
-          <div className="h-48 w-full rounded-xl bg-muted/50 mb-4" />
-          <div className="h-5 w-3/4 rounded bg-muted/50 mb-2" />
-          <div className="h-4 w-full rounded bg-muted/50 mb-2" />
-          <div className="h-4 w-2/3 rounded bg-muted/50" />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function ErrorState({
-  message,
-  onRetry,
-  isLoading,
-}: {
-  message?: string;
-  onRetry: () => void;
-  isLoading: boolean;
-}) {
-  return (
-    <div className="text-center py-12 space-y-4">
-      <p className="text-red-500">
-        Falha ao carregar posts{message ? `: ${message}` : ""}
-      </p>
-      <Button variant="outline" onClick={onRetry} disabled={isLoading}>
-        Tentar novamente
-      </Button>
     </div>
   );
 }

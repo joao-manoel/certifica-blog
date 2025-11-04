@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { AdPlaceholder } from "@/components/ads-placeholder";
 import { SuggestedPosts } from "@/components/related-posts";
 import TrackPostView from "@/components/track-post-view";
+import ShareButtons from "@/components/share-buttons";
 
 export const revalidate = 0; // força metadata sempre atualizado
 export const dynamic = "force-dynamic"; // importante p/ SSR do metadata
@@ -23,6 +24,7 @@ export async function generateMetadata(props: {
 
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.certifica.eng.br";
+
   const cover = post.coverUrl
     ? post.coverUrl.startsWith("http")
       ? post.coverUrl
@@ -58,6 +60,10 @@ export default async function PostPage(props: { params: Promise<Params> }) {
   const { slug } = await props.params;
   const post = await getPost(slug).catch(() => null);
   if (!post) notFound();
+
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.certifica.eng.br";
+  const canonicalUrl = `${baseUrl}/${slug}`;
 
   return (
     <article className="min-h-screen w-full bg-gradient-to-br from-background via-secondary/10 to-background">
@@ -103,6 +109,17 @@ export default async function PostPage(props: { params: Promise<Params> }) {
               publishedAt={post.publishedAt ?? post.createdAt}
               readTime={post.readTime}
             />
+
+            <div className="pt-4">
+              <ShareButtons
+                title={post.title}
+                url={canonicalUrl}
+                summary={
+                  post.excerpt ??
+                  "Artigo publicado no blog Certifica Engenharia."
+                }
+              />
+            </div>
           </div>
         </div>
       </section>

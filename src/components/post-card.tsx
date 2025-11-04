@@ -53,7 +53,7 @@ export default function PostCard({ post, index }: PostCardProps) {
 
         <CardHeader>
           <CardTitle className="text-xl group-hover:text-primary transition-colors line-clamp-2">
-            {post.title}
+            <Link href={`/${post.slug}`}>{post.title}</Link>
           </CardTitle>
           {post.excerpt && (
             <CardDescription className="line-clamp-2">
@@ -70,7 +70,7 @@ export default function PostCard({ post, index }: PostCardProps) {
             </div>
             <div className="flex items-center gap-1">
               <Clock size={14} />
-              <span>{post.readTime} min</span>
+              <span>Leia em {post.readTime} min</span>
             </div>
           </div>
 
