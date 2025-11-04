@@ -14,7 +14,7 @@ const _roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Certifica - Engenharia & Avaliações",
+  title: "Certifica - Blog",
   description:
     "A confiança que seu imóvel precisa, e a expertise que você merece!",
 };
