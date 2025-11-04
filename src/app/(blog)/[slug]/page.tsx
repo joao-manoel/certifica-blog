@@ -9,6 +9,7 @@ import PostMeta from "@/components/post-meta";
 import { Badge } from "@/components/ui/badge";
 import { AdPlaceholder } from "@/components/ads-placeholder";
 import { SuggestedPosts } from "@/components/related-posts";
+import TrackPostView from "@/components/track-post-view";
 
 type Params = { slug: string };
 
@@ -50,6 +51,8 @@ export default async function PostPage(props: { params: Promise<Params> }) {
 
   return (
     <article className="min-h-screen w-full bg-gradient-to-br from-background via-secondary/10 to-background">
+      {/* dispara tracking no client (não afeta SSR/RSC) */}
+      <TrackPostView slug={slug} />
       {/* HERO COM COVER */}
       <section className="relative h-[60vh] w-full overflow-hidden">
         {post.coverUrl ? (
