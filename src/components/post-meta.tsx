@@ -27,7 +27,7 @@ export default function PostMeta({
         <Calendar className="size-4" /> {fmt}
       </span>
       <span className="inline-flex items-center gap-1">
-        <Clock className="size-4" /> {readTime} min
+        <Clock className="size-4" /> Leia em {readTime} min
       </span>
     </div>
   );
