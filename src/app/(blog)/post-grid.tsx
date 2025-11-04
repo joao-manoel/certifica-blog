@@ -24,7 +24,7 @@ export default function PostsGrid({ categories }: Props) {
   const hasSearch = q.length >= 2; // mesmo limiar do hook
 
   const baseParams = useMemo(
-    () => ({ page, perPage, sort: "publishedAt:desc" } as const),
+    () => ({ page, pageSize: perPage, sort: "publishedAt" } as const),
     [page, perPage]
   );
 
@@ -44,8 +44,8 @@ export default function PostsGrid({ categories }: Props) {
     return {
       q,
       page,
-      perPage,
-      sort: "relevance:desc,publishedAt:desc",
+      pageSize: perPage,
+      sort: "relevance", // nada de ":desc"
     } as const;
   }, [hasSearch, q, page, perPage]);
 
