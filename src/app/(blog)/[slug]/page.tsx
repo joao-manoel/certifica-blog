@@ -22,7 +22,7 @@ export async function generateMetadata(props: {
   if (!post) return { title: "Post não encontrado" };
 
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://certifica.eng.br";
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.certifica.eng.br";
   const cover = post.coverUrl
     ? post.coverUrl.startsWith("http")
       ? post.coverUrl
@@ -40,7 +40,7 @@ export async function generateMetadata(props: {
       title,
       description,
       type: "article",
-      url: `${baseUrl}/blog/${slug}`,
+      url: `${baseUrl}/${slug}`,
       images: cover
         ? [{ url: cover, width: 1200, height: 630, alt: title }]
         : undefined,

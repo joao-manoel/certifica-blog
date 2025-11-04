@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: {
-    default: "Certifica Engenharia | Blog",
+    default: "Certifica | Blog",
     template: "%s | Certifica Engenharia",
   },
   description:
