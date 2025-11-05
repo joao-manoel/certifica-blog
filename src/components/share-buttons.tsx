@@ -7,7 +7,7 @@ import { SocialIcon } from "react-social-icons";
 
 type Props = {
   title: string;
-  url: string; // URL canônica (ex: https://blog.certifica.eng.br/post-slug)
+  url: string; 
   summary?: string;
 };
 

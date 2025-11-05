@@ -93,7 +93,7 @@ export function SuggestedPosts({
               <div className="p-4">
                 {/* Não retornamos categoria na rota; usei o autor como meta leve */}
                 <span className="text-xs text-accent font-semibold">
-                  {post.author?.username ?? post.author?.name ?? "—"}
+                  {post.author?.name ?? "—"}
                 </span>
 
                 <h4 className="font-semibold text-sm mt-1 mb-2 text-foreground line-clamp-2 group-hover:text-accent transition-colors">
