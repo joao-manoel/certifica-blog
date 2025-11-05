@@ -1,19 +1,38 @@
+// app/(blog)/[slug]/page.tsx
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import Image from "next/image";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+
 import { getPost } from "@/http/get-post";
 import PostContent from "@/components/post-content";
 import PostMeta from "@/components/post-meta";
 import { Badge } from "@/components/ui/badge";
-import { AdPlaceholder } from "@/components/ads-placeholder";
-import { SuggestedPosts } from "@/components/related-posts";
-import TrackPostView from "@/components/track-post-view";
-import ShareButtons from "@/components/share-buttons";
 
 export const revalidate = 0;
-export const dynamic = "force-dynamic";
+
+// Carregamento apenas no cliente (evita SSR de libs que tocam window/document)
+const ShareButtons = dynamic(() => import("@/components/share-buttons"), {
+  ssr: false,
+});
+const TrackPostView = dynamic(() => import("@/components/track-post-view"), {
+  ssr: false,
+});
 
 type Params = { slug: string };
+
+function isSocialBot(ua: string) {
+  return /facebookexternalhit|WhatsApp|twitterbot|linkedinbot|Slackbot|TelegramBot|Discordbot/i.test(
+    ua
+  );
+}
+
+function absoluteUrl(pathOrUrl: string, base: URL) {
+  return pathOrUrl.startsWith("http")
+    ? pathOrUrl
+    : new URL(pathOrUrl, base).toString();
+}
 
 export async function generateMetadata(props: {
   params: Promise<Params>;
@@ -34,18 +53,14 @@ export async function generateMetadata(props: {
   const path = `/${slug}`;
   const canonicalUrl = new URL(path, metadataBase).toString();
 
-  // Dê preferência a JPEG/PNG hospedado no SEU domínio
+  // Prefira imagem hospedada no seu domínio; mantenha fallback local 1200x630 JPEG
   const coverAbs = post.coverUrl
-    ? post.coverUrl.startsWith("http")
-      ? post.coverUrl
-      : new URL(post.coverUrl, metadataBase).toString()
+    ? absoluteUrl(post.coverUrl, metadataBase)
     : undefined;
-
-  // fallback OG local (1200x630) para evitar bloqueio/403 do bot
   const fallbackOg = new URL(
     "/images/placeholder.jpg",
     metadataBase
-  ).toString();
+  ).toString(); // troque por /og/posts/<slug>.jpg
   const ogImage = coverAbs ?? fallbackOg;
 
   return {
@@ -78,8 +93,43 @@ export default async function PostPage(props: { params: Promise<Params> }) {
 
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.certifica.eng.br";
+  const metadataBase = new URL(baseUrl);
   const canonicalUrl = `${baseUrl}/${slug}`;
 
+  const ua = (await headers()).get("user-agent") || "";
+  const bot = isSocialBot(ua);
+
+  // --- Renderização "bot-safe": sem client components, zero acessos a browser APIs ---
+  if (bot) {
+    const title = post.title;
+    const description =
+      post.excerpt ?? "Artigo publicado no blog Certifica Engenharia.";
+    const coverAbs = post.coverUrl
+      ? absoluteUrl(post.coverUrl, metadataBase)
+      : undefined;
+    const fallbackOg = new URL(
+      "/images/placeholder.jpg",
+      metadataBase
+    ).toString();
+    const ogImage = coverAbs ?? fallbackOg;
+
+    return (
+      <article>
+        <h1>{title}</h1>
+        <p>{description}</p>
+        {/* Renderiza a mesma imagem do OG para bots que usam heurística visual */}
+        <img
+          src={ogImage}
+          alt={title}
+          width={1200}
+          height={630}
+          style={{ maxWidth: "100%", height: "auto" }}
+        />
+      </article>
+    );
+  }
+
+  // --- Render normal para usuários humanos ---
   return (
     <article className="min-h-screen w-full bg-gradient-to-br from-background via-secondary/10 to-background">
       <TrackPostView slug={slug} />
@@ -143,7 +193,6 @@ export default async function PostPage(props: { params: Promise<Params> }) {
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-4 gap-10">
           <div className="lg:col-span-3 space-y-10">
-            <AdPlaceholder size="small" />
             <PostContent content={post.content} />
             {post.tags?.length ? (
               <div className="flex flex-wrap gap-2">
@@ -154,13 +203,9 @@ export default async function PostPage(props: { params: Promise<Params> }) {
                 ))}
               </div>
             ) : null}
-            <AdPlaceholder size="large" />
           </div>
 
-          <aside className="space-y-6">
-            <AdPlaceholder size="small" />
-            <SuggestedPosts identifier={post.id} />
-          </aside>
+          <aside className="space-y-6"></aside>
         </div>
       </section>
     </article>
