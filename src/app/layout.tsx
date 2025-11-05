@@ -26,6 +26,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
+      <head>
+        <meta
+          name="facebook-domain-verification"
+          content="r2oozs5ldn277cmz5xc9osbqlbgw4d"
+        />
+      </head>
       <body
         className={`${_roboto.className} ${_anton.className}
           antialiased`}
