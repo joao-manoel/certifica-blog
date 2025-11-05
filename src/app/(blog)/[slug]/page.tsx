@@ -10,8 +10,8 @@ import { SuggestedPosts } from "@/components/related-posts";
 import TrackPostView from "@/components/track-post-view";
 import ShareButtons from "@/components/share-buttons";
 
-export const revalidate = 0; // força metadata sempre atualizado
-export const dynamic = "force-dynamic"; // importante p/ SSR do metadata
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 type Params = { slug: string };
 
@@ -22,36 +22,51 @@ export async function generateMetadata(props: {
   const post = await getPost(slug).catch(() => null);
   if (!post) return { title: "Post não encontrado" };
 
-  const baseUrl =
+  const base =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.certifica.eng.br";
-
-  const cover = post.coverUrl
-    ? post.coverUrl.startsWith("http")
-      ? post.coverUrl
-      : `${baseUrl}${post.coverUrl}`
-    : undefined;
+  const metadataBase = new URL(base);
 
   const title = post.title;
   const description =
     post.excerpt ?? "Artigo publicado no blog Certifica Engenharia.";
 
+  // URL pública FINAL do post (sem /blog, para bater com seus links compartilhados)
+  const path = `/${slug}`;
+  const canonicalUrl = new URL(path, metadataBase).toString();
+
+  // Dê preferência a JPEG/PNG hospedado no SEU domínio
+  const coverAbs = post.coverUrl
+    ? post.coverUrl.startsWith("http")
+      ? post.coverUrl
+      : new URL(post.coverUrl, metadataBase).toString()
+    : undefined;
+
+  // fallback OG local (1200x630) para evitar bloqueio/403 do bot
+  const fallbackOg = new URL(
+    "/images/placeholder.jpg",
+    metadataBase
+  ).toString();
+  const ogImage = coverAbs ?? fallbackOg;
+
   return {
+    metadataBase,
     title,
     description,
+    alternates: { canonical: path },
     openGraph: {
       title,
       description,
       type: "article",
-      url: `${baseUrl}/${slug}`,
-      images: cover
-        ? [{ url: cover, width: 1200, height: 630, alt: title }]
-        : undefined,
+      url: canonicalUrl,
+      siteName: "Certifica Engenharia",
+      locale: "pt_BR",
+      images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
     },
     twitter: {
-      card: cover ? "summary_large_image" : "summary",
+      card: "summary_large_image",
       title,
       description,
-      images: cover ? [cover] : undefined,
+      images: [ogImage],
     },
   };
 }
