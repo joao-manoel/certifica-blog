@@ -3,11 +3,10 @@
 import { useCallback, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Share2, Link as LinkIcon, Facebook, Twitter } from "lucide-react";
-import { SocialIcon } from "react-social-icons";
 
 type Props = {
   title: string;
-  url: string; 
+  url: string;
   summary?: string;
 };
 
