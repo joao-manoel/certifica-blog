@@ -1,0 +1,20 @@
+# robots.txt para blog.certifica.eng.br
+
+User-agent: *
+Allow: /
+
+# Evitar crawl de rotas internas e assets
+Disallow: /admin
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+Disallow: /assets/
+
+# Evitar duplicados por parâmetros de tracking (UTM)
+Disallow: /*?utm_source=
+Disallow: /*?utm_medium=
+Disallow: /*?utm_campaign=
+Disallow: /*?fbclid=
+
+Sitemap: https://blog.certifica.eng.br/sitemap.xml
+Host: https://blog.certifica.eng.br

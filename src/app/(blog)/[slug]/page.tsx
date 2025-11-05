@@ -69,6 +69,24 @@ function isSocialBot(ua: string) {
 
 export default async function PostPage(props: { params: Promise<Params> }) {
   const { slug } = await props.params;
+
+  const RESERVED = new Set([
+    "sitemap",
+    "robots.txt",
+    "sitemap.xml",
+    "favicon.ico",
+    "manifest.webmanifest",
+    "asset-manifest.json",
+    "apple-touch-icon.png",
+    "icon.png",
+  ]);
+
+  // logo após extrair o slug:
+  if (RESERVED.has(slug)) {
+    // Evita bater no banco por engano
+    return notFound();
+  }
+
   const post = await getPost(slug).catch(() => null);
   if (!post) notFound();
 
