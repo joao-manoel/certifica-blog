@@ -61,7 +61,7 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between gap-24 h-16 md:h-20">
           {/* Logo */}
-          <Link href="/#home" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <Logo />
           </Link>
 
