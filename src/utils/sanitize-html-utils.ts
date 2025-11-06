@@ -51,7 +51,10 @@ const ALLOWED_ATTR = [
   "data-end",
 ];
 
-export function sanitizeHtml(html: string, p0: { allowedAttributes: { "*": string[]; }; }) {
+export function sanitizeHtml(
+  html: string,
+  p0: { allowedAttributes: { "*": string[] } }
+) {
   // Mantém style + data-attrs e limpa CSS perigoso
   return DOMPurify.sanitize(html, {
     ALLOWED_TAGS,
@@ -69,7 +72,15 @@ export function normalizeTinyMce(html: string) {
   let out = html
     .replace(/<li>\s*<p>/g, "<li>")
     .replace(/<\/p>\s*<\/li>/g, "</li>");
-  // Remova data-* se não precisar (limpa ruído)
-  out = out.replace(/\sdata-[a-z0-9-]+="[^"]*"/gi, "");
+
+  // Remova data-* ruidosos, MAS mantenha os do Instagram
+  // Preserva: data-instgrm-permalink, data-instgrm-version
+  out = out.replace(
+    /\sdata-(?!instgrm-(?:permalink|version)\b)[a-z0-9-]+="[^"]*"/gi,
+    ""
+  );
+
   return out;
 }
+
+

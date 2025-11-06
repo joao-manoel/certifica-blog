@@ -47,6 +47,7 @@ export default function RootLayout({
           <Footer />
           <Analytics />
         </Providers>
+        <script src="https://www.instagram.com/embed.js" />
       </body>
     </html>
   );
