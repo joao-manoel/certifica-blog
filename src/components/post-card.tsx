@@ -76,7 +76,14 @@ export default function PostCard({ post, index }: PostCardProps) {
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <User size={14} />
+              {post.author?.hashAvatar ? (
+                <img
+                  src={`/api/users/avatar/${post.author.username}.jpg`}
+                  className="size-3.5"
+                />
+              ) : (
+                <User size={14} />
+              )}
               <span>{post.author?.name ?? "—"}</span>
             </div>
 

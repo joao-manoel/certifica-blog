@@ -61,7 +61,7 @@ export default function PostsGrid({ categories }: Props) {
       page,
       pageSize: perPage,
       sort: "relevance",
-      categorySlug, // ← aqui
+      categorySlug,
     } as const;
   }, [hasSearch, q, page, perPage, categorySlug]);
 

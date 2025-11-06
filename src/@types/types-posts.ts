@@ -6,6 +6,8 @@ export interface AuthorSummary {
   id: string;
   name: string;
   username: string;
+  bio: string | null;
+  hashAvatar: boolean;
 }
 
 export interface CategorySummary {
