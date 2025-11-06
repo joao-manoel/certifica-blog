@@ -66,6 +66,8 @@ export function PostClient({
 
             <PostMeta
               authorName={post.author?.name ?? "—"}
+              authorUsername={post.author?.username}
+              hasAvatar={post.author?.hasAvatar}
               publishedAt={post.publishedAt ?? post.createdAt}
               readTime={post.readTime}
             />

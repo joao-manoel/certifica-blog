@@ -76,10 +76,10 @@ export default function PostCard({ post, index }: PostCardProps) {
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              {post.author?.hashAvatar ? (
+              {post.author?.hasAvatar ? (
                 <img
-                  src={`/api/users/avatar/${post.author.username}.jpg`}
-                  className="size-3.5"
+                  src={`/api/users/avatar/${post.author.username}`}
+                  className="size-5 object-cover rounded-full"
                 />
               ) : (
                 <User size={14} />

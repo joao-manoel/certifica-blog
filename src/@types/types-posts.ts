@@ -7,7 +7,7 @@ export interface AuthorSummary {
   name: string;
   username: string;
   bio: string | null;
-  hashAvatar: boolean;
+  hasAvatar: boolean;
 }
 
 export interface CategorySummary {
