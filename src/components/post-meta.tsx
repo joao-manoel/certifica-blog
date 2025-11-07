@@ -1,6 +1,7 @@
 "use client";
 
 import { Calendar, Clock, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export default function PostMeta({
   authorName,
@@ -21,18 +22,16 @@ export default function PostMeta({
     month: "short",
     year: "numeric",
   });
+  const initials = authorName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2);
 
   return (
     <div className="flex items-center gap-4 text-sm text-muted-foreground">
       <span className="inline-flex items-center gap-1">
-        {hasAvatar ? (
-          <img
-            src={`/api/users/avatar/${authorUsername}`}
-            className="size-5 object-cover rounded-full"
-          />
-        ) : (
-          <User size={14} />
-        )}{" "}
+        <User className="size-4" />
         {authorName}
       </span>
       <span className="inline-flex items-center gap-1">

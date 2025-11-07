@@ -1,33 +1,20 @@
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
-import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { getRelatedPosts } from "@/http/get-related-post";
+import RelatedPostCard from "@/app/(blog)/[slug]/components/related-post-card";
+import { normalizeAuthor } from "@/utils/normalize";
+import type { PostListItem } from "@/@types/types-posts";
 
 type SuggestedPostsProps = {
-  identifier: string; // slug ou UUID do post base
+  identifier: string;
   limit?: number;
   includeScheduled?: boolean;
 };
 
-function formatDate(dateISO: string | null) {
-  if (!dateISO) return null;
-  try {
-    const date = new Date(dateISO);
-    return new Intl.DateTimeFormat("pt-BR", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }).format(date);
-  } catch {
-    return null;
-  }
-}
-
-export function SuggestedPosts({
+export function SuggestedPostsFooter({
   identifier,
   limit = 4,
   includeScheduled = false,
@@ -40,7 +27,18 @@ export function SuggestedPosts({
         limit,
         includeScheduled,
       });
-      return res.related;
+      const items = (res.related ?? []).map((r: any) => {
+        const post: Partial<PostListItem> = {
+          id: r.id,
+          title: r.title,
+          slug: r.slug,
+          coverUrl: r.coverUrl ?? null,
+          publishedAt: r.publishedAt ?? null,
+          author: normalizeAuthor(r.author),
+        };
+        return post as PostListItem;
+      });
+      return items;
     },
     enabled: !!identifier,
     staleTime: 60_000,
@@ -55,9 +53,9 @@ export function SuggestedPosts({
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-bold text-foreground mb-4">
-        Posts Sugeridos
-      </h3>
+      <h2 className="text-3xl font-bold text-foreground mb-8">
+        Posts Relacionados
+      </h2>
 
       {isLoading && (
         <Card className="p-4 glass-strong">
@@ -75,18 +73,13 @@ export function SuggestedPosts({
         </Card>
       )}
 
-      <div className="flex gap-4 flex-col">
-        {items.map((post) => {
-          const dateLabel = formatDate(post.publishedAt);
-          return (
-            <Link key={post.id} href={`/${post.slug}`} className="">
-              <h4 className="font-semibold text-sm mt-1 mb-2 text-foreground line-clamp-2 group-hover:text-accent transition-colors hover:text-green-950/80">
-                {post.title}
-              </h4>
-            </Link>
-          );
-        })}
-      </div>
+      {items.length > 0 && (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {items.map((post) => (
+            <RelatedPostCard key={post.slug} post={post} />
+          ))}
+        </div>
+      )}
 
       {emptyState && (
         <Card className="p-4 glass-strong">
@@ -96,14 +89,6 @@ export function SuggestedPosts({
           </p>
         </Card>
       )}
-
-      <Link
-        href="/"
-        className="w-full cursor-pointer py-2 text-sm font-semibold text-accent hover:text-accent/80 transition-colors flex items-center justify-center gap-2 group"
-      >
-        Ver todos os posts
-        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-      </Link>
     </div>
   );
 }

@@ -1,4 +1,3 @@
-// src/http/get-related-posts.ts
 import { api } from "./api-client";
 
 export interface RelatedPost {

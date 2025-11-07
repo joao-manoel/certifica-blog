@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import PostMeta from "@/components/post-meta";
 import PostContent from "@/components/post-content";
+import AuthorCard from "./components/author-card";
+import { SuggestedPostsFooter } from "@/components/related-posts-footer";
 
 // carrega os componentes que dependem de browser
 const ShareButtons = dynamic(() => import("@/components/share-buttons"), {
@@ -100,9 +102,31 @@ export function PostClient({
                 ))}
               </div>
             ) : null}
+            <div className="mt-12 p-8 bg-card border border-border rounded-lg">
+              <h3 className="text-2xl font-bold text-foreground mb-2">
+                Gostou deste conteúdo?
+              </h3>
+              <p className="text-muted-foreground mb-6">
+                Compartilhe este post com seus amigos e colegas nas redes
+                sociais
+              </p>
+              <div className="pt-4">
+                <ShareButtons
+                  title={post.title}
+                  url={canonicalUrl}
+                  summary={
+                    post.excerpt ??
+                    "Artigo publicado no blog Certifica Engenharia."
+                  }
+                />
+              </div>
+            </div>
+            <SuggestedPostsFooter identifier={post.id} />
           </div>
 
-          <aside className="space-y-6">
+          <aside className="sticky space-y-6 top-24 ">
+            <AuthorCard author={post.author} />
+
             <SuggestedPosts identifier={post.id} />
           </aside>
         </div>
