@@ -107,7 +107,7 @@ export function PostClient({
                 Gostou deste conteúdo?
               </h3>
               <p className="text-muted-foreground mb-6">
-                Compartilhe este post com seus amigos e colegas nas redes
+                Compartilhe este conteúdo com seus amigos e colegas nas redes
                 sociais
               </p>
               <div className="-mt-2">
