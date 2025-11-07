@@ -110,7 +110,7 @@ export function PostClient({
                 Compartilhe este post com seus amigos e colegas nas redes
                 sociais
               </p>
-              <div className="pt-4">
+              <div className="-mt-2">
                 <ShareButtons
                   title={post.title}
                   url={canonicalUrl}
