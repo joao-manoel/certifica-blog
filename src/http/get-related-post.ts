@@ -32,12 +32,10 @@ export interface GetRelatedPostsResponse {
 export async function getRelatedPosts({
   identifier,
   limit,
-  includeScheduled,
 }: GetRelatedPostsParams): Promise<GetRelatedPostsResponse> {
   const searchParams = new URLSearchParams();
 
   if (limit != null) searchParams.set("limit", String(limit));
-  if (includeScheduled) searchParams.set("includeScheduled", "true");
 
   const qs = searchParams.toString();
   const url = qs

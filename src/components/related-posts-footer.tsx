@@ -16,16 +16,14 @@ type SuggestedPostsProps = {
 
 export function SuggestedPostsFooter({
   identifier,
-  limit = 4,
-  includeScheduled = false,
+  limit = 3,
 }: SuggestedPostsProps) {
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["posts", "related", identifier, limit, includeScheduled],
+    queryKey: ["posts", "related", identifier, limit],
     queryFn: async () => {
       const res = await getRelatedPosts({
         identifier,
         limit,
-        includeScheduled,
       });
       const items = (res.related ?? []).map((r: any) => {
         const post: Partial<PostListItem> = {
