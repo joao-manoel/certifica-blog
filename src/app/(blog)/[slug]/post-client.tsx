@@ -28,11 +28,11 @@ export function PostClient({
   canonicalUrl: string;
 }) {
   return (
-    <article className="min-h-screen w-full bg-gradient-to-br from-background via-secondary/10 to-background">
+    <article className="min-h-screen w-full bg-gradient-to-br from-background via-secondary/10 to-background mt-17 sm:mt-0">
       <TrackPostView slug={post.slug} />
 
       {/* HERO */}
-      <section className="relative h-[60vh] w-full overflow-hidden">
+      <section className="relative h-[60vh] w-full overflow-hidden ">
         {post.coverUrl ? (
           <Image
             src={post.coverUrl}
@@ -48,7 +48,7 @@ export function PostClient({
         <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/60 to-background/10 backdrop-blur-[2px]" />
 
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[92%] max-w-5xl">
-          <div className="backdrop-blur-md bg-background/60 border border-border/40 rounded-2xl p-6 md:p-8 shadow-lg">
+          <div className="backdrop-blur-md bg-background/60 border border-border/40 rounded-2xl p-6 sm:p-6 md:p-8 shadow-lg">
             {post.categories?.length ? (
               <div className="flex flex-wrap gap-2 mb-3">
                 {post.categories.map((c: any) => (
