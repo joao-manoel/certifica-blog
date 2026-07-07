@@ -86,7 +86,9 @@
 }
 
 @theme inline {
-  /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
+  --font-source-sans: var(--font-source-sans-var);
+  --font-roboto: var(--font-source-sans-var);
+  --font-oswald: var(--font-oswald-var);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

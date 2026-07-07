@@ -1,16 +1,21 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { Anton, Roboto } from "next/font/google";
+import { Oswald, Source_Sans_3 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import Providers from "./provider";
 import "./globals.css";
 
-const _anton = Anton({ subsets: ["latin"], weight: "400" });
-const _roboto = Roboto({
+const _oswald = Oswald({
   subsets: ["latin"],
-  weight: ["100", "200", "400", "800"],
+  weight: ["500", "700"],
+  variable: "--font-oswald-var",
+});
+const _sourceSans = Source_Sans_3({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-source-sans-var",
 });
 
 export const metadata: Metadata = {
@@ -33,7 +38,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${_roboto.className} ${_anton.className}
+        className={`${_sourceSans.variable} ${_oswald.variable} ${_sourceSans.className}
           antialiased`}
         cz-shortcut-listen="true"
       >

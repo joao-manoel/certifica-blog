@@ -20,7 +20,7 @@ export default function PostsGrid({ categories }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
   const [page, setPage] = useState(1);
-  const perPage = 9;
+  const perPage = 12;
 
   const q = useDebounce(searchTerm.trim(), 350);
   const hasSearch = q.length >= 2;
@@ -29,7 +29,7 @@ export default function PostsGrid({ categories }: Props) {
   const categorySlug = useMemo(
     () =>
       selectedCategory === "Todos" ? undefined : slugify(selectedCategory),
-    [selectedCategory]
+    [selectedCategory],
   );
 
   // LISTAGEM (sem q) — já inclui filtro por categoria
@@ -40,8 +40,8 @@ export default function PostsGrid({ categories }: Props) {
         pageSize: perPage,
         sort: "publishedAt",
         categorySlug, // ← aqui
-      } as const),
-    [page, perPage, categorySlug]
+      }) as const,
+    [page, perPage, categorySlug],
   );
 
   const {

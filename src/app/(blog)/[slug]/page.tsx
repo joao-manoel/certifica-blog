@@ -34,7 +34,7 @@ export async function generateMetadata(props: {
 
   const fallbackOg = new URL(
     "/images/placeholder.jpg",
-    metadataBase
+    metadataBase,
   ).toString();
   const ogImage = coverAbs ?? fallbackOg;
 
@@ -63,7 +63,7 @@ export async function generateMetadata(props: {
 
 function isSocialBot(ua: string) {
   return /facebookexternalhit|WhatsApp|twitterbot|linkedinbot|Slackbot|TelegramBot|Discordbot/i.test(
-    ua
+    ua,
   );
 }
 
@@ -98,7 +98,7 @@ export default async function PostPage(props: { params: Promise<Params> }) {
   if (isSocialBot(ua)) {
     return (
       <article>
-        <h1>{post.title}</h1>
+        <h1 className="font-roboto">{post.title}</h1>
         <p>
           {post.excerpt ?? "Artigo publicado no blog Certifica Engenharia."}
         </p>
