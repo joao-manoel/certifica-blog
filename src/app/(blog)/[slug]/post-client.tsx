@@ -7,11 +7,17 @@ import PostMeta from "@/components/post-meta";
 import PostContent from "@/components/post-content";
 import AuthorCard from "./components/author-card";
 import { SuggestedPostsFooter } from "@/components/related-posts-footer";
+import type { PostDetail } from "@/@types/types-posts";
 
 // carrega os componentes que dependem de browser
 const ShareButtons = dynamic(() => import("@/components/share-buttons"), {
   ssr: false,
 });
+const ListenPostButton = dynamic(
+  () =>
+    import("@/components/listen-post-button").then((m) => m.ListenPostButton),
+  { ssr: false },
+);
 const TrackPostView = dynamic(() => import("@/components/track-post-view"), {
   ssr: false,
 });
@@ -24,11 +30,11 @@ export function PostClient({
   post,
   canonicalUrl,
 }: {
-  post: any;
+  post: PostDetail;
   canonicalUrl: string;
 }) {
   return (
-    <article className="min-h-screen w-full bg-linear-to-br from-background via-secondary/10 to-background mt-17 sm:mt-0">
+    <article className="min-h-screen w-full bg-linear-to-br from-background via-gray/10 to-background mt-17 sm:mt-0">
       <TrackPostView slug={post.slug} />
 
       {/* HERO */}
@@ -51,7 +57,7 @@ export function PostClient({
           <div className="backdrop-blur-md bg-background/60 border border-border/40 rounded-2xl p-6 sm:p-6 md:p-8 shadow-lg">
             {post.categories?.length ? (
               <div className="flex flex-wrap gap-2 mb-3">
-                {post.categories.map((c: any) => (
+                {post.categories.map((c) => (
                   <Badge
                     key={c.id}
                     className="bg-primary/10 text-primary border-primary/20"
@@ -74,7 +80,7 @@ export function PostClient({
               readTime={post.readTime}
             />
 
-            <div className="pt-4">
+            <div className="pt-4 space-y-3">
               <ShareButtons
                 title={post.title}
                 url={canonicalUrl}
@@ -92,10 +98,17 @@ export function PostClient({
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-4 gap-10">
           <div className="lg:col-span-3 space-y-10">
+            <div className="flex justify-center">
+              <ListenPostButton
+                title={post.title}
+                excerpt={post.excerpt}
+                content={post.content}
+              />
+            </div>
             <PostContent content={post.content} />
             {post.tags?.length ? (
               <div className="flex flex-wrap gap-2">
-                {post.tags.map((t: any) => (
+                {post.tags.map((t) => (
                   <Badge key={t.id} variant="outline">
                     #{t.name}
                   </Badge>

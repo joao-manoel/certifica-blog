@@ -1,13 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
+import type { AuthorSummary } from "@/@types/types-posts";
 
 interface AuthorCardProps {
-  author: {
-    name: string;
-    username: string;
-    bio: string;
-    hasAvatar: boolean;
-  };
+  author: AuthorSummary;
 }
 
 const AuthorCard = ({ author }: AuthorCardProps) => {
@@ -36,9 +32,11 @@ const AuthorCard = ({ author }: AuthorCardProps) => {
 
           <div className="flex-1 text-center">
             <p className="font-medium text-foreground mb-2">{author.name}</p>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {author.bio}
-            </p>
+            {author.bio ? (
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {author.bio}
+              </p>
+            ) : null}
           </div>
         </div>
       </CardContent>

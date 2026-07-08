@@ -14,7 +14,7 @@ const categories = [
 
 export default function BlogPage() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-background via-secondary/20 to-background">
+    <div className="min-h-screen bg-linear-to-br from-background via-gray/20 to-background">
       <Header />
 
       {/* Hero Section */}
