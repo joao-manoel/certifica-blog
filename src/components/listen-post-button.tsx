@@ -54,9 +54,7 @@ function stripHtml(html: string) {
     .forEach((node) => node.remove());
 
   return Array.from(
-    doc.body.querySelectorAll(
-      "h1, h2, h3, h4, h5, h6, p, li, blockquote",
-    ),
+    doc.body.querySelectorAll("h1, h2, h3, h4, h5, h6, p, li, blockquote"),
   )
     .map((node) => node.textContent?.replace(/\s+/g, " ").trim())
     .filter(Boolean)
@@ -280,11 +278,6 @@ export function ListenPostButton({
             className="h-full rounded-full bg-secondary transition-[width] duration-300"
             style={{ width: `${progress}%` }}
           />
-        </div>
-
-        <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
-          <span>{formatTime(elapsedSeconds)} percorridos</span>
-          <span>{formatTime(remainingSeconds)} restantes</span>
         </div>
       </div>
     </div>
