@@ -11,5 +11,8 @@ export function usePostsQuery(params: ListPostsParams) {
   return useQuery<ListPostsResponse>({
     queryKey: ["posts", params],
     queryFn: () => listPosts(params),
+    placeholderData: (previous) => previous,
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   });
 }

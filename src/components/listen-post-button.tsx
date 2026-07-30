@@ -126,7 +126,6 @@ export function ListenPostButton({
     () => estimateDurationSeconds(textToRead),
     [textToRead],
   );
-  const remainingSeconds = Math.max(totalSeconds - elapsedSeconds, 0);
   const progress = Math.min((elapsedSeconds / totalSeconds) * 100, 100);
 
   function stop() {
@@ -222,14 +221,14 @@ export function ListenPostButton({
   if (!isSupported) return null;
 
   return (
-    <div className="w-full max-w-xl rounded-lg border border-border/50 bg-background/70 p-3 shadow-sm">
+    <div className="w-full md:min-w-[28rem]">
       <div className="flex flex-wrap items-center gap-2">
         <Button
           type="button"
           size="sm"
-          variant="secondary"
+          variant="outline"
           onClick={toggle}
-          className="gap-2 cursor-pointer"
+          className="min-h-11 cursor-pointer gap-2 border-[#d8ddd3] bg-white text-[var(--article-heading)] hover:bg-[var(--article-surface)]"
           aria-label={status === "playing" ? "Pausar leitura" : "Ouvir artigo"}
         >
           {status === "playing" ? (
@@ -252,7 +251,7 @@ export function ListenPostButton({
             size="sm"
             variant="ghost"
             onClick={stop}
-            className="gap-2 cursor-pointer"
+            className="min-h-11 cursor-pointer gap-2"
             aria-label="Parar leitura"
           >
             <RotateCcw className="h-4 w-4" />
@@ -260,14 +259,14 @@ export function ListenPostButton({
           </Button>
         ) : null}
 
-        <div className="ml-auto text-xs font-medium text-muted-foreground">
+        <div className="ml-auto text-xs font-medium text-[#687068]">
           {formatTime(elapsedSeconds)} / {formatTime(totalSeconds)}
         </div>
       </div>
 
       <div className="mt-3 space-y-1.5">
         <div
-          className="h-2 w-full overflow-hidden rounded-full bg-muted"
+          className="h-1.5 w-full overflow-hidden rounded-full bg-[#e2e6de]"
           role="progressbar"
           aria-label="Progresso da leitura"
           aria-valuemin={0}
@@ -275,7 +274,7 @@ export function ListenPostButton({
           aria-valuenow={Math.round(progress)}
         >
           <div
-            className="h-full rounded-full bg-secondary transition-[width] duration-300"
+            className="h-full rounded-full bg-[var(--article-accent)] transition-[width] duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>

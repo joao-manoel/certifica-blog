@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Clock, User } from "lucide-react";
+import { CalendarDays, Clock3 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export default function PostMeta({
@@ -11,8 +11,8 @@ export default function PostMeta({
   readTime,
 }: {
   authorName: string;
-  authorUsername: string;
-  hasAvatar: boolean;
+  authorUsername?: string;
+  hasAvatar?: boolean;
   publishedAt: string;
   readTime: number;
 }) {
@@ -29,16 +29,27 @@ export default function PostMeta({
     .slice(0, 2);
 
   return (
-    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-      <span className="inline-flex items-center gap-1">
-        <User className="size-4" />
+    <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-[#626a62]">
+      <span className="inline-flex items-center gap-2 font-medium text-[var(--article-heading)]">
+        <Avatar className="size-8 border border-[#d8ddd3]">
+          <AvatarImage
+            src={hasAvatar ? `/api/users/avatar/${authorUsername}` : ""}
+            alt=""
+            className="object-cover"
+          />
+          <AvatarFallback className="bg-[#e8ece5] text-xs">
+            {initials}
+          </AvatarFallback>
+        </Avatar>
         {authorName}
       </span>
-      <span className="inline-flex items-center gap-1">
-        <Calendar className="size-4" /> {fmt}
+      <span className="inline-flex items-center gap-1.5">
+        <CalendarDays className="size-4" aria-hidden="true" />
+        {fmt}
       </span>
-      <span className="inline-flex items-center gap-1">
-        <Clock className="size-4" /> Leia em {readTime} min
+      <span className="inline-flex items-center gap-1.5">
+        <Clock3 className="size-4" aria-hidden="true" />
+        {readTime} min de leitura
       </span>
     </div>
   );

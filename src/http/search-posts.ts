@@ -21,6 +21,7 @@ export interface SearchPostsParams {
   tagSlug?: string;
   authorId?: string;
   sort?: Sort | string; // aceito string e normalizo
+  orderDir?: "asc" | "desc";
 }
 
 export interface SearchPostsResponse {
@@ -31,6 +32,14 @@ export interface SearchPostsResponse {
 }
 
 const EMPTY: SearchPostsResponse = { page: 1, perPage: 0, total: 0, items: [] };
+
+interface SearchApiResponse {
+  page?: number;
+  pageSize?: number;
+  perPage?: number;
+  total?: number;
+  items?: PostListItem[];
+}
 
 function normalizeSort(v?: string): Sort {
   const s = (v ?? "").toLowerCase();
@@ -59,6 +68,7 @@ export async function searchPosts(params: SearchPostsParams) {
 
   // sort enum aceito pelo backend
   if (params.sort) sp.set("sort", normalizeSort(String(params.sort)));
+  if (params.orderDir) sp.set("orderDir", params.orderDir);
 
   const url = `blog/posts/search?${sp.toString()}`;
 
@@ -68,9 +78,9 @@ export async function searchPosts(params: SearchPostsParams) {
       next: { revalidate: 0 },
     });
 
-    if ((res as any).status === 204) return EMPTY;
+    if (res.status === 204) return EMPTY;
 
-    const data = await res.json<any>();
+    const data = await res.json<SearchApiResponse>();
 
     // normaliza resposta (pageSize -> perPage) para o resto do app
     const perPageResp =

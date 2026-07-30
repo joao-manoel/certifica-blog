@@ -38,7 +38,7 @@ function CtaButton({
       )}
       onClick={onClick}
     >
-      <Link href="/orcamento">{children}</Link>
+      <Link href="https://www.certifica.eng.br/orcamento">{children}</Link>
     </Button>
   );
 }

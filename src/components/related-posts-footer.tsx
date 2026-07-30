@@ -1,92 +1,86 @@
 "use client";
 
-import { useMemo } from "react";
-import { Card } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
-import { getRelatedPosts } from "@/http/get-related-post";
-import RelatedPostCard from "@/app/(blog)/[slug]/components/related-post-card";
-import { normalizeAuthor } from "@/utils/normalize";
-import type { PostListItem } from "@/@types/types-posts";
+import Link from "next/link";
 
-type SuggestedPostsProps = {
-  identifier: string;
-  limit?: number;
-  includeScheduled?: boolean;
-};
+import RelatedPostCard from "@/app/(blog)/[slug]/components/related-post-card";
+import { getRelatedPosts } from "@/http/get-related-post";
 
 export function SuggestedPostsFooter({
   identifier,
   limit = 3,
-}: SuggestedPostsProps) {
-  const { data, isLoading, isError, error } = useQuery({
+}: {
+  identifier: string;
+  limit?: number;
+}) {
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["posts", "related", identifier, limit],
-    queryFn: async () => {
-      const res = await getRelatedPosts({
-        identifier,
-        limit,
-      });
-      const items = (res.related ?? []).map((r: any) => {
-        const post: Partial<PostListItem> = {
-          id: r.id,
-          title: r.title,
-          slug: r.slug,
-          coverUrl: r.coverUrl ?? null,
-          publishedAt: r.publishedAt ?? null,
-          author: normalizeAuthor(r.author),
-        };
-        return post as PostListItem;
-      });
-      return items;
-    },
-    enabled: !!identifier,
+    queryFn: async () =>
+      (
+        await getRelatedPosts({
+          identifier,
+          limit,
+        })
+      ).related,
+    enabled: Boolean(identifier),
     staleTime: 60_000,
   });
 
   const items = data ?? [];
 
-  const emptyState = useMemo(
-    () => !isLoading && !isError && items.length === 0,
-    [isLoading, isError, items.length]
-  );
-
   return (
-    <div className="space-y-4">
-      <h2 className="text-3xl font-bold text-foreground mb-8">
-        Posts Relacionados
-      </h2>
-
-      {isLoading && (
-        <Card className="p-4 glass-strong">
-          <div className="h-4 w-40 mb-3 bg-muted/50 rounded animate-pulse" />
-          <div className="h-24 w-full bg-muted/30 rounded animate-pulse" />
-        </Card>
-      )}
-
-      {isError && (
-        <Card className="p-4 glass-strong">
-          <p className="text-sm text-destructive">
-            Falha ao carregar sugestões
-            {(error as Error)?.message ? `: ${(error as Error).message}` : "."}
+    <div>
+      <div className="mb-8 flex items-end justify-between gap-5">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--article-support)]/70">
+            Continue explorando
           </p>
-        </Card>
-      )}
+          <h2 className="mt-2 font-oswald text-3xl font-bold uppercase text-[var(--article-heading)]">
+            Artigos relacionados
+          </h2>
+        </div>
+        <Link
+          href="/"
+          className="hidden text-sm font-semibold text-[var(--article-accent)] hover:underline sm:block"
+        >
+          Ver todos
+        </Link>
+      </div>
 
-      {items.length > 0 && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {items.map((post) => (
-            <RelatedPostCard key={post.slug} post={post} />
+      {isLoading ? (
+        <div className="grid gap-7 md:grid-cols-3" aria-busy="true">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="animate-pulse">
+              <div className="aspect-[16/10] rounded-2xl bg-[#e2e6de]" />
+              <div className="mt-5 h-3 w-24 rounded bg-[#e2e6de]" />
+              <div className="mt-3 h-6 w-full rounded bg-[#e2e6de]" />
+            </div>
           ))}
         </div>
-      )}
+      ) : null}
 
-      {emptyState && (
-        <Card className="p-4 glass-strong">
-          <p className="text-sm text-muted-foreground">
-            Nenhum post relacionado foi encontrado. Confira os últimos
-            publicados na página do blog.
-          </p>
-        </Card>
-      )}
+      {isError ? (
+        <p className="rounded-xl border border-[#e3c2b4] bg-[#fff6f1] p-4 text-sm text-[#7a4936]">
+          Não foi possível carregar os artigos relacionados agora.
+        </p>
+      ) : null}
+
+      {items.length > 0 ? (
+        <div className="grid gap-8 md:grid-cols-3">
+          {items.map((post) => (
+            <RelatedPostCard key={post.id} post={post} />
+          ))}
+        </div>
+      ) : null}
+
+      {!isLoading && !isError && items.length === 0 ? (
+        <p className="text-sm text-[#626a62]">
+          Não encontramos artigos relacionados.{" "}
+          <Link href="/" className="font-semibold text-[var(--article-accent)]">
+            Explore os conteúdos mais recentes.
+          </Link>
+        </p>
+      ) : null}
     </div>
   );
 }

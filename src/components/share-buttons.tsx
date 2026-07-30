@@ -1,121 +1,105 @@
 "use client";
 
+import {
+  Check,
+  Copy,
+  Facebook,
+  MessageCircle,
+  Share2,
+  Twitter,
+} from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Share2, Link as LinkIcon, Facebook, Twitter } from "lucide-react";
 
 type Props = {
   title: string;
   url: string;
   summary?: string;
+  compact?: boolean;
 };
 
-export default function ShareButtons({ title, url, summary }: Props) {
+export default function ShareButtons({ title, url }: Props) {
   const [copied, setCopied] = useState(false);
-  const shareSupported = typeof navigator !== "undefined" && !!navigator.share;
 
-  // Helper para adicionar parâmetros UTM
   const withUtm = useCallback((base: string, source: string) => {
-    const u = new URL(base);
-    u.searchParams.set("utm_source", source);
-    u.searchParams.set("utm_medium", "social");
-    u.searchParams.set("utm_campaign", "post_share");
-    return u.toString();
+    const nextUrl = new URL(base);
+    nextUrl.searchParams.set("utm_source", source);
+    nextUrl.searchParams.set("utm_medium", "social");
+    nextUrl.searchParams.set("utm_campaign", "post_share");
+    return nextUrl.toString();
   }, []);
 
-  const encoded = useMemo(() => {
-    const whatsappUrl = withUtm(url, "whatsapp");
-    const twitterUrl = withUtm(url, "x");
-    const facebookUrl = withUtm(url, "facebook");
-    return {
-      t: encodeURIComponent(title),
-      s: encodeURIComponent(summary ?? ""),
-      whatsappUrl: encodeURIComponent(whatsappUrl),
-      twitterUrl: encodeURIComponent(twitterUrl),
-      facebookUrl: encodeURIComponent(facebookUrl),
-    };
-  }, [title, url, summary, withUtm]);
+  const links = useMemo(() => {
+    const encodedTitle = encodeURIComponent(title);
+    return [
+      {
+        label: "WhatsApp",
+        icon: MessageCircle,
+        href: `https://wa.me/?text=${encodedTitle}%20${encodeURIComponent(
+          withUtm(url, "whatsapp"),
+        )}`,
+      },
+      {
+        label: "X (Twitter)",
+        icon: Twitter,
+        href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodeURIComponent(
+          withUtm(url, "x"),
+        )}`,
+      },
+      {
+        label: "Facebook",
+        icon: Facebook,
+        href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          withUtm(url, "facebook"),
+        )}`,
+      },
+    ];
+  }, [title, url, withUtm]);
 
-  const handleWebShare = useCallback(async () => {
-    if (!shareSupported) return;
-    try {
-      await navigator.share({
-        title,
-        text: summary ?? title,
-        url: withUtm(url, "webshare"),
-      });
-    } catch {
-      /* usuário cancelou */
-    }
-  }, [shareSupported, title, summary, url, withUtm]);
-
-  const handleCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(withUtm(url, "copy"));
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      const textarea = document.createElement("textarea");
-      textarea.value = withUtm(url, "copy");
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textarea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    }
-  }, [url, withUtm]);
-
-  // URLs com UTM
-  const whatsappHref = `https://wa.me/?text=${encoded.t}%20${encoded.whatsappUrl}`;
-  const twitterHref = `https://twitter.com/intent/tweet?text=${encoded.t}&url=${encoded.twitterUrl}`;
-  const facebookHref = `https://www.facebook.com/sharer/sharer.php?u=${encoded.facebookUrl}`;
+  async function handleCopy() {
+    await navigator.clipboard.writeText(withUtm(url, "copy"));
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1600);
+  }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      {shareSupported && (
-        <Button
-          size="sm"
-          variant="default"
-          onClick={handleWebShare}
-          aria-label="Compartilhar"
-          className="gap-2 cursor-pointer"
-        >
-          <Share2 className="h-4 w-4" />
+    <div className="relative shrink-0">
+      <details className="group/share">
+        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-center gap-2 rounded-lg border border-[#d8ddd3] bg-white px-4 text-sm font-semibold text-[var(--article-heading)] transition-colors hover:border-[var(--article-line)] hover:bg-[var(--article-surface)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--article-line)]">
+          <Share2 className="size-4" aria-hidden="true" />
           Compartilhar
-        </Button>
-      )}
+        </summary>
 
-      <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
-        <Button size="sm" variant="outline" className="gap-2 cursor-pointer">
-          <img src="/images/whatsapp-icon.png" className="size-4" />
-          WhatsApp
-        </Button>
-      </a>
+        <div className="absolute right-0 top-full z-30 mt-2 w-56 rounded-xl border border-[#d8ddd3] bg-white p-2 shadow-[0_18px_45px_rgba(29,61,50,0.16)]">
+          {links.map(({ label, icon: Icon, href }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex min-h-10 items-center gap-3 rounded-lg px-3 text-sm text-[var(--article-heading)] hover:bg-[var(--article-surface)]"
+            >
+              <Icon className="size-4" aria-hidden="true" />
+              {label}
+            </a>
+          ))}
 
-      <a href={twitterHref} target="_blank" rel="noopener noreferrer">
-        <Button size="sm" variant="outline" className="gap-2 cursor-pointer">
-          <Twitter className="h-4 w-4" />X (Twitter)
-        </Button>
-      </a>
-
-      <a href={facebookHref} target="_blank" rel="noopener noreferrer">
-        <Button size="sm" variant="outline" className="gap-2 cursor-pointer">
-          <Facebook className="h-4 w-4" />
-          Facebook
-        </Button>
-      </a>
-
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={handleCopy}
-        aria-label="Copiar link"
-        className="gap-2 cursor-pointer"
-      >
-        <LinkIcon className="h-4 w-4" />
-        {copied ? "Link copiado!" : "Copiar link"}
-      </Button>
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="flex min-h-10 w-full items-center gap-3 rounded-lg px-3 text-sm text-[var(--article-heading)] hover:bg-[var(--article-surface)]"
+          >
+            {copied ? (
+              <Check className="size-4 text-emerald-700" aria-hidden="true" />
+            ) : (
+              <Copy className="size-4" aria-hidden="true" />
+            )}
+            {copied ? "Link copiado" : "Copiar link"}
+          </button>
+        </div>
+      </details>
+      <span className="sr-only" aria-live="polite">
+        {copied ? "Link copiado para a área de transferência" : ""}
+      </span>
     </div>
   );
 }

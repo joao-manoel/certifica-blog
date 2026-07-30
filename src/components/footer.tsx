@@ -1,107 +1,116 @@
 import { Facebook, Instagram, Linkedin } from "lucide-react";
+import Link from "next/link";
+
 import Logo from "./logo";
+
+const serviceLinks = [
+  { label: "Laudos", href: "https://www.certifica.eng.br/servicos" },
+  { label: "Consultoria", href: "https://www.certifica.eng.br/servicos" },
+  {
+    label: "Projetos Arquitetônicos",
+    href: "https://www.certifica.eng.br/servicos",
+  },
+  {
+    label: "Regularização de Imóveis",
+    href: "https://www.certifica.eng.br/servicos",
+  },
+];
+
+const companyLinks = [
+  { label: "Sobre nós", href: "https://www.certifica.eng.br/#sobre" },
+  { label: "Serviços", href: "https://www.certifica.eng.br/servicos" },
+  { label: "Contato", href: "https://www.certifica.eng.br/#contact" },
+  { label: "Blog", href: "/" },
+];
+
+const socialLinks = [
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/certificaeng",
+    icon: Facebook,
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/certifica.eng/",
+    icon: Instagram,
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/certifica.eng/",
+    icon: Linkedin,
+  },
+];
 
 export function Footer() {
   return (
-    <footer className="glass-strong border-t border-border/50 py-12">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+    <footer className="border-t border-[#dfe2d9] bg-[#f7f7f2] px-5 py-12 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-10 border-b border-[#dfe2d9] pb-10 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Logo logoWidth="sm" />
-            </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              A confiança que seu imóvel precisa e a expertise que você merece!
+            <Logo logoWidth="sm" />
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-[#62655f]">
+              Informação técnica para cuidar do seu imóvel com clareza,
+              segurança e responsabilidade.
             </p>
           </div>
 
-          <div>
-            <h3 className="font-semibold text-foreground mb-4">Serviços</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Laudos
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Consultoria
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Projetos Arquitetônicos
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Regularização de Imóveis
-                </a>
-              </li>
-            </ul>
-          </div>
+          <FooterColumn title="Serviços" links={serviceLinks} />
+          <FooterColumn title="Empresa" links={companyLinks} />
 
           <div>
-            <h3 className="font-semibold text-foreground mb-4">Empresa</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Sobre Nós
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Equipe
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Carreiras
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Blog
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-foreground mb-4">
-              Redes Sociais
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.16em] text-primary">
+              Acompanhe
             </h3>
             <div className="flex gap-3">
-              <a
-                href="https://www.facebook.com/certificaeng"
-                target="_blank"
-                className="w-10 h-10 rounded-lg glass flex items-center justify-center hover:bg-primary/10 transition-colors"
-              >
-                <Facebook className="h-5 w-5 text-muted-foreground hover:text-primary" />
-              </a>
-              <a
-                href="https://www.instagram.com/certifica.eng/"
-                target="_blank"
-                className="w-10 h-10 rounded-lg glass flex items-center justify-center hover:bg-primary/10 transition-colors"
-              >
-                <Instagram className="h-5 w-5 text-muted-foreground hover:text-primary" />
-              </a>
-              <a
-                href="https://www.linkedin.com/company/certifica.eng/"
-                target="_blank"
-                className="w-10 h-10 rounded-lg glass flex items-center justify-center hover:bg-primary/10 transition-colors"
-              >
-                <Linkedin className="h-5 w-5 text-muted-foreground hover:text-primary" />
-              </a>
+              {socialLinks.map(({ label, href, icon: Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={label}
+                  className="grid size-11 place-items-center rounded-full border border-[#cfd4ca] text-primary transition-colors hover:border-primary hover:bg-primary hover:text-white"
+                >
+                  <Icon className="size-4" aria-hidden="true" />
+                </a>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-border/50 text-center text-sm text-muted-foreground">
-          <p>&copy; 2025 Certifica. Todos os direitos reservados.</p>
+        <div className="flex flex-col gap-3 pt-7 text-sm text-[#70736d] sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} Certifica. Todos os direitos reservados.</p>
           <p>CNPJ: 60.567.670/0001-16</p>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: Array<{ label: string; href: string }>;
+}) {
+  return (
+    <div>
+      <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.16em] text-primary">
+        {title}
+      </h3>
+      <ul className="space-y-3 text-sm text-[#62655f]">
+        {links.map(({ label, href }) => (
+          <li key={label}>
+            <Link
+              href={href}
+              className="transition-colors hover:text-secondary"
+            >
+              {label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

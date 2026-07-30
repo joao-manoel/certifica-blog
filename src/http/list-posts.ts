@@ -7,13 +7,14 @@ import { api } from "./api-client";
 
 export interface ListPostsParams {
   page?: number;
-  perPage?: number;
+  pageSize?: number;
   status?: PostStatus;
   visibility?: Visibility;
   categorySlug?: string;
   tagSlug?: string;
   authorId?: string;
-  sort?: string;
+  orderBy?: "createdAt" | "publishedAt";
+  orderDir?: "asc" | "desc";
 }
 
 export interface ListPostsResponse {
@@ -27,23 +28,34 @@ export async function listPosts(params: ListPostsParams = {}) {
   const searchParams = new URLSearchParams();
 
   if (params.page != null) searchParams.set("page", String(params.page));
-  if (params.perPage != null)
-    searchParams.set("perPage", String(params.perPage));
+  if (params.pageSize != null)
+    searchParams.set("pageSize", String(params.pageSize));
   if (params.status) searchParams.set("status", params.status);
   if (params.visibility) searchParams.set("visibility", params.visibility);
   if (params.categorySlug) searchParams.set("category", params.categorySlug);
   if (params.tagSlug) searchParams.set("tag", params.tagSlug);
   if (params.authorId) searchParams.set("authorId", params.authorId);
-  if (params.sort) searchParams.set("sort", params.sort);
+  if (params.orderBy) searchParams.set("orderBy", params.orderBy);
+  if (params.orderDir) searchParams.set("orderDir", params.orderDir);
 
   const qs = searchParams.toString();
   const url = qs ? `blog/public/posts?${qs}` : "blog/public/posts";
 
-  const result = await api
+  const data = await api
     .get(url, {
       next: { tags: ["posts"] },
     })
-    .json<ListPostsResponse>();
+    .json<{
+      page: number;
+      pageSize: number;
+      total: number;
+      items: PostListItem[];
+    }>();
 
-  return result;
+  return {
+    page: data.page,
+    perPage: data.pageSize,
+    total: data.total,
+    items: data.items,
+  } satisfies ListPostsResponse;
 }

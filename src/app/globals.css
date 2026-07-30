@@ -128,25 +128,6 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* Wrapper para conteúdo HTML salvo pelo TinyMCE */
-.tinymce-content {
-  /* Tipografia base + responsivo, sem limite de largura */
-  /* (usa utilitários Tailwind via @apply) */
-  @apply prose prose-neutral dark:prose-invert max-w-none;
-
-  /* Cores da tipografia atreladas ao seu design system */
-  --tw-prose-body: hsl(var(--foreground));
-  --tw-prose-headings: hsl(var(--foreground));
-  --tw-prose-links: hsl(var(--primary));
-  --tw-prose-bold: hsl(var(--foreground));
-  --tw-prose-counters: hsl(var(--muted-foreground));
-  --tw-prose-bullets: hsl(var(--muted-foreground));
-  --tw-prose-hr: hsl(var(--border));
-  --tw-prose-quotes: hsl(var(--foreground));
-  --tw-prose-quote-borders: hsl(var(--border));
-  --tw-prose-captions: hsl(var(--muted-foreground));
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -280,4 +261,28 @@
 
 .animate-scale.animated {
   animation-name: scaleIn;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .animate-on-scroll {
+    opacity: 1;
+  }
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }

@@ -25,12 +25,12 @@ function normalizeParams(params: SearchPostsParams) {
     page: params.page ?? 1,
     pageSize,
     sort: normalizeSort(params.sort as string | undefined),
+    orderDir: params.orderDir ?? "desc",
   };
 }
 
 export function useSearchPostsQuery(params: SearchPostsParams | null) {
-  // exige 2+ chars para disparar busca
-  const enabled = !!params?.q && params.q.trim().length >= 2;
+  const enabled = !!params?.q && params.q.trim().length >= 1;
 
   // Atenção: a key inclui somente os campos relevantes para o request
   const queryKey = [
@@ -42,6 +42,7 @@ export function useSearchPostsQuery(params: SearchPostsParams | null) {
           page: params!.page ?? 1,
           pageSize: params!.pageSize ?? params!.perPage ?? 10,
           sort: normalizeSort(params!.sort as string | undefined),
+          orderDir: params!.orderDir ?? "desc",
           status: params!.status ?? undefined,
           visibility: params!.visibility ?? undefined,
           categorySlug: params!.categorySlug ?? undefined,
@@ -64,8 +65,14 @@ export function useSearchPostsQuery(params: SearchPostsParams | null) {
     gcTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    retry(failureCount, error: any) {
-      const status = error?.response?.status ?? 0;
+    retry(failureCount, error) {
+      const status =
+        typeof error === "object" &&
+        error !== null &&
+        "response" in error &&
+        error.response instanceof Response
+          ? error.response.status
+          : 0;
       if (status >= 400 && status < 500) return false;
       return failureCount < 2;
     },

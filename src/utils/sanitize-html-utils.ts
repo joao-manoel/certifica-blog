@@ -37,6 +37,7 @@ const ALLOWED_ATTR = [
   // estilos/classes do Tiny
   "style",
   "class",
+  "id",
   // imagens/links
   "src",
   "alt",
@@ -51,10 +52,7 @@ const ALLOWED_ATTR = [
   "data-end",
 ];
 
-export function sanitizeHtml(
-  html: string,
-  p0: { allowedAttributes: { "*": string[] } }
-) {
+export function sanitizeHtml(html: string) {
   // Mantém style + data-attrs e limpa CSS perigoso
   return DOMPurify.sanitize(html, {
     ALLOWED_TAGS,
