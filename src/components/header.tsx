@@ -15,6 +15,7 @@ const NAV_LINKS: NavLink[] = [
   { label: "Sobre", href: "https://certifica.eng.br/#sobre" },
   { label: "Serviços", href: "https://certifica.eng.br/servicos" },
   { label: "Contato", href: "https://certifica.eng.br/#contact" },
+  { label: "Portfólio", href: "https://certifica.eng.br/portfolio" },
   { label: "Blog", href: "/" },
 ];
 
